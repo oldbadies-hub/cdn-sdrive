@@ -2,57 +2,80 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Video Player</title>
+<title>Content Viewer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
-<link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css"/>
+<!-- ULTRA SAFE META -->
+<meta name="referrer" content="no-referrer">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="robots" content="noindex,nofollow">
+
+<!-- Fluid Player -->
+<link rel="stylesheet" href="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.css">
+<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
 
 <style>
 html,body{
   margin:0;
   padding:0;
   background:#000;
-  height:100%;
   font-family:Arial,Helvetica,sans-serif;
+  color:#fff;
+  height:100%;
 }
-.wrapper{
-  min-height:100vh;
+.center{
   display:flex;
-  flex-direction:column;
   justify-content:center;
   align-items:center;
+  height:100vh;
 }
-.video-box{
+.player-wrapper{
+  max-width:960px;
   width:100%;
-  max-width:720px;
+  margin:auto;
+  text-align:center;
 }
 video{
   width:100%;
   height:auto;
-  background:#000;
+  max-height:70vh;
 }
-.watch-more button{
-  background:#e50914;
-  color:#fff;
-  border:none;
-  padding:12px 30px;
-  font-size:16px;
-  border-radius:4px;
-  cursor:pointer;
-  animation:blink 1s infinite;
+.ad{
+  margin:10px auto;
+}
+.blink{
+  animation:blink 1.2s infinite;
 }
 @keyframes blink{
-  0%{opacity:1}
-  50%{opacity:.5}
-  100%{opacity:1}
+  0%,100%{opacity:1}
+  50%{opacity:.3}
 }
+.btn{
+  display:inline-block;
+  margin:15px auto;
+  padding:14px 28px;
+  background:#ff2b2b;
+  color:#fff;
+  text-decoration:none;
+  border-radius:6px;
+  font-weight:bold;
+}
+.btn:hover{background:#ff4d4d}
 </style>
 </head>
 
 <body>
 
-<div class="wrapper">
-<center><script>
+<div id="home" class="center" style="display:none">
+  <a href="https://www.google.com" class="btn blink">Content Viewer</a>
+</div>
+
+<div id="player" style="display:none">
+  <div class="player-wrapper">
+
+    <!-- ADS TOP 320x50 -->
+    <div class="ad">
+      <script>
   atOptions = {
     'key' : '59d0d701e0b9375f89d36790661bc444',
     'format' : 'iframe',
@@ -61,20 +84,14 @@ video{
     'params' : {}
   };
 </script>
-<script src="https://hedwigmonday.com/59d0d701e0b9375f89d36790661bc444/invoke.js"></script></center>
-  <div class="video-box">
-    <video id="player"
-      controls
-      preload="metadata"
-      playsinline
-      webkit-playsinline>
-    </video>
-  </div>
+<script src="https://hedwigmonday.com/59d0d701e0b9375f89d36790661bc444/invoke.js"></script>
+    </div>
 
-  <div class="watch-more">
-    <button onclick="watchMore()">Watch More</button>
-  </div>
-<center><script>
+    <video id="video" controls playsinline preload="metadata"></video>
+
+    <!-- ADS BOTTOM 468x60 -->
+    <div class="ad">
+      <script>
   atOptions = {
     'key' : '1e913099272a86b149b6976bf29056c9',
     'format' : 'iframe',
@@ -83,61 +100,48 @@ video{
     'params' : {}
   };
 </script>
-<script src="https://hedwigmonday.com/1e913099272a86b149b6976bf29056c9/invoke.js"></script></center>
+<script src="https://hedwigmonday.com/1e913099272a86b149b6976bf29056c9/invoke.js"></script>
+    </div>
+
+    <a href="https://otieu.com/4/9798710" class="btn blink">Watch More</a>
+  </div>
 </div>
 
-<script src="https://cdn.fluidplayer.com/v3/current/fluidplayer.min.js"></script>
-
 <script>
-document.addEventListener("DOMContentLoaded", function(){
+(function(){
+  const q = new URLSearchParams(window.location.search);
+  const vid = q.get("v");
 
-  const params = new URLSearchParams(window.location.search);
-  const vid = params.get("v");
-
-  const videoMap = {
-    "cklymw2l1": "https://cdn.slicedrive.com/cklymw2l1.mp4",
-    "c4fdd254f": "https://cdn.aceimg.com/c4fdd254f.mp4"
-  };
-
-  if(!vid || !videoMap[vid]){
-    document.querySelector(".video-box").innerHTML =
-      "<p style='color:#fff;text-align:center'>Video not found</p>";
+  if(!vid){
+    document.getElementById("home").style.display="flex";
     return;
   }
 
-  const video = document.getElementById("player");
+  const video = document.getElementById("video");
 
-  // HAPUS SOURCE LAMA (PENTING)
-  while(video.firstChild){
-    video.removeChild(video.firstChild);
+  // CDN AUTO DETECT
+  let src="";
+  if(vid.length > 8){
+    src = "https://cdn.slicedrive.com/" + vid + ".mp4";
+  }else{
+    src = "https://cdn.aceimg.com/" + vid + ".mp4";
   }
 
-  // BUAT SOURCE MP4 (INI KUNCI SUPAYA MAU PLAY)
-  const source = document.createElement("source");
-  source.src = videoMap[vid];
-  source.type = "video/mp4";
-  video.appendChild(source);
+  video.src = src;
+  document.getElementById("player").style.display="block";
 
-  // FORCE LOAD (PENTING UNTUK FB / iOS)
-  video.load();
-
-  // INIT FLUID PLAYER SETELAH LOAD
-  fluidPlayer("player",{
+  fluidPlayer("video",{
     layoutControls:{
       fillToContainer:true,
-      autoPlay:false,
+      autoPlay:false,     // FACEBOOK SAFE
       mute:false,
-      primaryColor:"#e50914",
-      playButtonShowing:true,
-      playbackRateEnabled:false
+      allowDownload:false,
+      playbackRateEnabled:false,
+      posterImage:""
     }
   });
 
-});
-
-function watchMore(){
-  alert("More videos coming soon!");
-}
+})();
 </script>
    <!-- Histats.com  START  (aync)-->
 <script type="text/javascript">var _Hasync= _Hasync|| [];
