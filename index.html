@@ -90,16 +90,14 @@ video {
 
 <body>
 
-<!-- HOME PAGE -->
-<div id="home" class="home" style="display:none">
-    <a href="https://www.google.com"
-       class="home-btn"
-       rel="noopener noreferrer">
-       VIDEOS
+<!-- HOME -->
+<div id="home" class="home">
+    <a href="https://www.google.com" class="home-btn" rel="noopener noreferrer">
+        VIDEOS
     </a>
 </div>
 
-<!-- VIDEO PLAYER -->
+<!-- PLAYER -->
 <div id="player" class="container" style="display:none">
 
     <!-- AD TOP -->
@@ -117,7 +115,10 @@ video {
     </div>
 
     <!-- VIDEO -->
-    <video id="videoPlayer" controls playsinline preload="metadata" crossorigin="anonymous">
+    <video id="videoPlayer"
+           controls
+           playsinline
+           preload="metadata">
         <source id="videoSource" src="" type="video/mp4">
     </video>
 
@@ -137,41 +138,44 @@ video {
 
     <!-- CTA -->
     <a href="https://otieu.com/4/9798710" class="watch-more">Watch More</a>
-
 </div>
 
 <script>
-/* GET PARAM */
+/* PARAM */
 const params = new URLSearchParams(window.location.search);
 const videoId = params.get('v');
+
+/* ELEMENTS */
+const home   = document.getElementById('home');
+const player = document.getElementById('player');
+const video  = document.getElementById('videoPlayer');
+const source = document.getElementById('videoSource');
 
 /* CDN */
 const cdnPrimary = 'https://cdn.slicedrive.com/';
 const cdnBackup  = 'https://cdn.aceimg.com/';
 
-const home = document.getElementById('home');
-const player = document.getElementById('player');
-const video = document.getElementById('videoPlayer');
-const source = document.getElementById('videoSource');
-
-/* ROUTING */
-if (!videoId) {
-    home.style.display = 'flex';
-} else {
+if (videoId) {
+    home.style.display = 'none';
     player.style.display = 'block';
+
     source.src = cdnPrimary + videoId + '.mp4';
     video.load();
 
-    fluidPlayer('videoPlayer', {
-        autoplay: false,
-        muted: false,
-        loop: false,
-        allowDownload: false,
-        layoutControls: {
-            fillToContainer: true,
-            autoPlay: false,
-            mute: false,
-            controlBar: { autoHide: true }
+    /* INIT FLUID PLAYER AFTER VIDEO READY */
+    video.addEventListener('loadeddata', function () {
+        if (!video.dataset.fp) {
+            fluidPlayer('videoPlayer', {
+                autoplay: false,
+                muted: false,
+                allowDownload: false,
+                layoutControls: {
+                    fillToContainer: true,
+                    autoPlay: false,
+                    controlBar: { autoHide: true }
+                }
+            });
+            video.dataset.fp = '1';
         }
     });
 
