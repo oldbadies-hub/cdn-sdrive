@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Content Viewer</title>
+<title>VEGAS XVIBES Content Viewer</title>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
 <!-- ULTRA SAFE META -->
@@ -67,31 +67,34 @@ video{
 <body>
 
 <div id="home" class="center" style="display:none">
-  <a href="https://www.google.com" class="btn blink">Content Viewer</a>
+  <a href="https://www.google.com" class="btn blink">VEGAS XVIBES Content Viewer</a>
 </div>
 
 <div id="player" style="display:none">
   <div class="player-wrapper">
 
     <!-- ADS TOP 320x50 -->
-    <div class="ad">
-      <script>
-  atOptions = {
-    'key' : '59d0d701e0b9375f89d36790661bc444',
-    'format' : 'iframe',
-    'height' : 50,
-    'width' : 320,
-    'params' : {}
-  };
-</script>
-<script src="https://hedwigmonday.com/59d0d701e0b9375f89d36790661bc444/invoke.js"></script>
-    </div>
+    <style type="text/css">
+  .mobileShow {display: none;}
 
-    <video id="video" controls playsinline preload="metadata"></video>
+  /* Smartphone Portrait and Landscape */
+  @media only screen
+    and (min-device-width : 320px)
+    and (max-device-width : 480px){ 
+      .mobileShow {display: inline;}
+  }
+  .mobileHide { display: inline; }
 
-    <!-- ADS BOTTOM 468x60 -->
-    <div class="ad">
-      <script>
+  /* Smartphone Portrait and Landscape */
+  @media only screen
+    and (min-device-width : 320px)
+    and (max-device-width : 480px){
+     .mobileHide { display: none;}
+  }
+</style>
+
+     <div class="mobileShow">
+<center> <script>
   atOptions = {
     'key' : '1e913099272a86b149b6976bf29056c9',
     'format' : 'iframe',
@@ -100,10 +103,25 @@ video{
     'params' : {}
   };
 </script>
-<script src="https://hedwigmonday.com/1e913099272a86b149b6976bf29056c9/invoke.js"></script>
+<script src="https://hedwigmonday.com/1e913099272a86b149b6976bf29056c9/invoke.js"></script></center></div>
+<div class="mobileHide"><center><script>
+  atOptions = {
+    'key' : '59d0d701e0b9375f89d36790661bc444',
+    'format' : 'iframe',
+    'height' : 50,
+    'width' : 320,
+    'params' : {}
+  };
+</script>
+<script src="https://hedwigmonday.com/59d0d701e0b9375f89d36790661bc444/invoke.js"></script></center></div>
     </div>
 
-    <a href="https://otieu.com/4/9798710" class="btn blink">Watch More</a>
+    <video id="video" controls playsinline preload="metadata"></video>
+
+    <!-- ADS BOTTOM 468x60 -->
+    </div>
+
+    <a href="https://hedwigmonday.com/rn3mhpzpv7?key=d42ca47683b2620f56b0e93018d0bb32" class="btn blink">Watch More</a>
   </div>
 </div>
 
